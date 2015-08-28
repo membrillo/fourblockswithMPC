@@ -9,8 +9,67 @@ Solver::Solver()
 {
 }
 
+void Solver::addVirtualUnits(mpc *mpc){
+	std::vector <int> busNums;
+	for (int i = 0; i < mpc->getMatrixVariable("bus").rows; i++){
+		if (mpc->getMatrixVariable("bus").getCol(3).at(i)>0){
+			busNums.push_back(mpc->getMatrixVariable("bus").getCol(1).at(i));
+		}
+	}
+	std::cout << "Se deben agregar " << busNums.size() << " unidades virtuales " << std::endl;
+	
+	std::vector <double> dummyVector;
+	for (int i = 0; i < busNums.size(); i++){
+		dummyVector.push_back(busNums.at(i)); //1
+		dummyVector.push_back(0);// 2
+		dummyVector.push_back(0); //3
+		dummyVector.push_back(0); //4
+		dummyVector.push_back(0); //5
+		dummyVector.push_back(0); //6
+		dummyVector.push_back(0); //7
+		dummyVector.push_back(2); // unidad virtual 8
+		dummyVector.push_back(999); //9
+		dummyVector.push_back(0); //10
+		dummyVector.push_back(0); //11
+		dummyVector.push_back(0);// 12
+		dummyVector.push_back(0); //13
+		dummyVector.push_back(1); //14
+		dummyVector.push_back(0); //15
+		dummyVector.push_back(0); //16
+		dummyVector.push_back(0); //17
+		dummyVector.push_back(0);// 18
+		dummyVector.push_back(0); //19
+		dummyVector.push_back(0); //20
+		dummyVector.push_back(0); //21
+		dummyVector.push_back(0); //22
+		mpc->getMatrixVariable("gen").addRowFromVector(dummyVector);
+
+		dummyVector.clear();
+		dummyVector.shrink_to_fit();
+
+		dummyVector.push_back(0); //1
+		dummyVector.push_back(0); //2
+		dummyVector.push_back(0); //3
+		dummyVector.push_back(0); //4
+		dummyVector.push_back(0); //5
+		dummyVector.push_back(10000); //6
+		dummyVector.push_back(0); //7
+
+		mpc->getMatrixVariable("gencost").addRowFromVector(dummyVector);
+		dummyVector.clear();
+		dummyVector.shrink_to_fit();
+	}
+	
+
+	
+
+
+}
+
 void Solver::solve(mpc mpc){
 
+
+	addVirtualUnits(&mpc);
 
 
 	mpc.printVariablesStored();
@@ -100,10 +159,13 @@ void Solver::solve(mpc mpc){
 					break;
 				}
 				Potencias[i*subperiodos*rowsGenMat + j*rowsGenMat + k].set(GRB_StringAttr_VarName, name.str()); //P[0]=P11v P[1]=P21v P[2]=p31v P[3]=p41v P[4]=p51v P[5]=p61v P[6]=p71v P[7]=p81v P[8]=p91v P[9]=p11r P[10]=p21r
+				Potencias[i*subperiodos*rowsGenMat + j*rowsGenMat + k].set(GRB_DoubleAttr_UB, mpc.getMatrixVariable("gen").getCol(9).at(k)*mpc.getMatrixVariable("gen").getCol(14).at(k));
 			}
 		}
 	}
 	model.update();
+
+	
 
 	GRBVar* n;
 
@@ -243,7 +305,7 @@ void Solver::solve(mpc mpc){
 
 
 	// Criterio Potencia Maxima
-
+	
 	for (int i = 0; i < rowsGenMat; i++){
 		for (int j = 0; j < periodos; j++){
 			for (int l = 0; l < subperiodos; l++){
@@ -256,23 +318,23 @@ void Solver::solve(mpc mpc){
 					model.update();
 				}
 				else{
-					model.addConstr(Potencias[i + j*rowsGenMat*subperiodos + l*rowsGenMat] <= mpc.getMatrixVariable("gen").getCol(9).at(i), "Potencia Maxima");
-					model.update();
+					
 
 				}
 			}
 		}
 	}
-
-
-
+	
 
 
 	model.update();
 	model.write("archivo.lp");
+	std::cout << "############################# OPTIMAZING ##################################" << std::endl;
+
 	model.optimize();
 
 	//Para mostrar los resultados
+	
 	for (int i = 0; i < periodos; i++){
 		for (int j = 0; j < rowsGenMat; j++){
 			cout << Potencias[i*rowsGenMat + j].get(GRB_StringAttr_VarName) << ": " << Potencias[i*rowsGenMat + j].get(GRB_DoubleAttr_X) << endl;
@@ -284,7 +346,7 @@ void Solver::solve(mpc mpc){
 		}
 	}
 
-
+	
 
 
 	// se borran las variables de la memoria

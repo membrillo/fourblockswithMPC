@@ -1,0 +1,24 @@
+
+Gurobi 6.0.4 (win32) logging started 08/28/15 02:29:49
+
+
+Gurobi Optimizer version 6.0.4 build v6.0.4rc0 (win32)
+Copyright (c) 2015, Gurobi Optimization, Inc.
+
+Read LP format model from file archivo.lp
+Reading time = 0.01 seconds
+(null): 543 rows, 195 columns, 3695 nonzeros
+Optimize a model with 543 rows, 195 columns and 3695 nonzeros
+Coefficient statistics:
+  Matrix range    [2e-03, 3e+02]
+  Objective range [1e+04, 1e+08]
+  Bounds range    [5e+01, 1e+03]
+  RHS range       [3e+00, 2e+03]
+Presolve removed 420 rows and 25 columns
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.01 seconds
+Thread count was 1 (of 8 available processors)
+
+Model is infeasible
+Best objective -, best bound -, gap -

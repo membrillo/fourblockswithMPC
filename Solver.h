@@ -6,5 +6,7 @@ public:
 	Solver();
 	void solve(mpc mpc);
 	~Solver();
+private:
+	void addVirtualUnits(mpc *mpc);
 };
 
