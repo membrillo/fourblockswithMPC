@@ -126,7 +126,7 @@ Subject To
  PotenciasGeneradas: P15m + P25m + P35m + P45m + P55m + P65m + P75m + P85m
    + P95m = 949.98
  PotenciasGeneradas: P15p + P25p + P35p + P45p + P55p + P65p + P75p + P85p
-   + P95p = 1800
+   + P95p = 999.6
  Reserve_critery_periode_1v: 150 n11 + 100 n21 + 250 n31 >= 140
  Reserve_critery_periode_1r: 150 n11 + 100 n21 + 250 n31 >= 199.976
  Reserve_critery_periode_1m: 150 n11 + 100 n21 + 250 n31 >= 259.952
@@ -170,7 +170,7 @@ Subject To
    + 250 n34 + 150 n15 + 100 n25 + 250 n35 >= 739.976
  Reserve_critery_periode_5p: 150 n11 + 100 n21 + 250 n31 + 150 n12
    + 100 n22 + 250 n32 + 150 n13 + 100 n23 + 250 n33 + 150 n14 + 100 n24
-   + 250 n34 + 150 n15 + 100 n25 + 250 n35 >= 1760
+   + 250 n34 + 150 n15 + 100 n25 + 250 n35 >= 799.52
  PTDF_Constrain_Superior: - 0.402563 P21v - 0.32173 P31v - 0.314889 P51v
    - 0.314889 P61v - 0.314889 P71v - 0.32173 P81v - 0.406428 P91v <= 400
  PTDF_Constrain_Inferior: 0.402563 P21v + 0.32173 P31v + 0.314889 P51v

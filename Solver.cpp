@@ -66,11 +66,83 @@ void Solver::addVirtualUnits(mpc *mpc){
 
 }
 
+
+
+void Solver::checkValidFile(mpc mpc){
+	try{
+		if (!mpc.matrixExists("bus")){
+			throw ERROR_NO_BUS_MATRIX;
+		}
+		if (!mpc.matrixExists("gen")){
+			throw ERROR_NO_GEN_MATRIX;
+		}
+		if (!mpc.matrixExists("gencost")){
+			throw ERROR_NO_GENCOST_MATRIX;
+		}
+		if (!mpc.matrixExists("branch")){
+			throw ERROR_NO_BRANCH_MATRIX;
+		}
+		if (!mpc.matrixExists("factor")){
+			throw ERROR_NO_FACTOR_MATRIX;
+		}
+		if (mpc.getMatrixVariable("bus").cols != 13){
+			throw "bus";
+		}
+		if (mpc.getMatrixVariable("gen").cols != 22){
+			throw "gen";
+		}
+		if (mpc.getMatrixVariable("branch").cols != 13){
+			throw "branch";
+		}
+		if (mpc.getMatrixVariable("gencost").cols != 7){
+			throw "gencost";
+		}
+
+
+	}
+	catch (int ERROR_x){
+		switch (ERROR_x){
+		case ERROR_NO_BUS_MATRIX:
+		{
+			std::cout << "FATAL ERROR : BUS matrix was not found on mpc file" << std::endl;
+			break;
+		}
+		case ERROR_NO_GEN_MATRIX:
+		{
+			std::cout << "FATAL ERROR : GEN matrix was not found on mpc file" << std::endl;
+			break;
+		}
+		case ERROR_NO_FACTOR_MATRIX:
+		{
+			std::cout << "FATAL ERROR : FACTOR matrix was not found on mpc file" << std::endl;
+			break;
+		}
+		case ERROR_NO_GENCOST_MATRIX:
+		{
+			std::cout << "FATAL ERROR : GENCOST matrix was not found on mpc file" << std::endl;
+			break;
+		}
+		case ERROR_NO_BRANCH_MATRIX:
+		{
+			std::cout << "FATAL ERROR : BRANCH matrix was not found on mpc file" << std::endl;
+			break;
+		}
+		}
+		abort();
+	}
+	catch (std::string exception){
+		std::cout << "FATAL ERROR: Matrix " << exception << " has bad size";
+		abort();
+	}
+
+}
+
 void Solver::solve(mpc mpc){
 
 
 	addVirtualUnits(&mpc);
 
+	checkValidFile(mpc);
 
 	mpc.printVariablesStored();
 

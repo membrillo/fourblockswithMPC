@@ -14,7 +14,7 @@ using namespace std;
 
 int main(int argc, char *argv[]){
 	
-	MpcReader mpcReader(argv[1]);
+	MpcReader mpcReader("case4.m");
 	mpcReader.read();
 
 	Solver solver;
