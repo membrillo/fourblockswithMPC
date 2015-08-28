@@ -1,0 +1,65 @@
+﻿Build started 27-08-2015 22:01:04.
+     1>Project "C:\Users\Felipe\Documents\Visual Studio 2013\Projects\proyecto4bloquesconMPC\proyecto\proyecto.vcxproj" on node 2 (Rebuild target(s)).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(388,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (proyecto.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\gurobi604\win32\include /IC:\gurobi603\win64\include /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt jpError.cpp jpMatrix.cpp mpc.cpp mpcMatrix.cpp MpcReader.cpp Solver.cpp Source.cpp
+         Source.cpp
+         Solver.cpp
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\solver.cpp(187): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\jpmatrix.h(56): warning C4018: '<' : signed/unsigned mismatch
+                 c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\solver.cpp(207) : see reference to function template instantiation 'void matrix::Init<11,6>(double (&)[11][6],UINT,UINT)' being compiled
+         MpcReader.cpp
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpcreader.cpp(50): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpcreader.cpp(91): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpcreader.cpp(133): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpcreader.cpp(167): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpcreader.cpp(238): warning C4101: 'endPosition' : unreferenced local variable
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpcreader.cpp(237): warning C4101: 'startPosition' : unreferenced local variable
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpcreader.cpp(317): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpcreader.cpp(339): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpcreader.cpp(404): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpcreader.cpp(455): warning C4018: '<' : signed/unsigned mismatch
+         mpcMatrix.cpp
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpcmatrix.cpp(82): warning C4018: '>' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpcmatrix.cpp(89): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpcmatrix.cpp(161): warning C4018: '>' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpcmatrix.cpp(165): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpcmatrix.cpp(175): warning C4018: '>' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpcmatrix.cpp(179): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpcmatrix.cpp(187): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpcmatrix.cpp(199): warning C4018: '>' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpcmatrix.cpp(203): warning C4018: '<' : signed/unsigned mismatch
+         mpc.cpp
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpc.cpp(94): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpc.cpp(100): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpc.cpp(109): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpc.cpp(116): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpc.cpp(128): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\mpc.cpp(152): warning C4018: '<' : signed/unsigned mismatch
+         jpMatrix.cpp
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\jpmatrix.cpp(10): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\jpmatrix.cpp(20): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\jpmatrix.cpp(39): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\jpmatrix.cpp(40): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\jpmatrix.cpp(49): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\jpmatrix.cpp(52): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\jpmatrix.cpp(53): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\jpmatrix.cpp(68): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\jpmatrix.cpp(69): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\felipe\documents\visual studio 2013\projects\proyecto4bloquesconmpc\proyecto\jpmatrix.cpp(105): warning C4018: '<' : signed/unsigned mismatch
+         jpError.cpp
+         Generating Code...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Felipe\Documents\Visual Studio 2013\Projects\proyecto4bloquesconMPC\Debug\proyecto4bloques.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\gurobi604\win32\lib /LIBPATH:C:\gurobi603\win64\lib C:\gurobi604\win32\lib\gurobi60.lib C:\gurobi604\win32\lib\gurobi_c++mtd2013.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Felipe\Documents\Visual Studio 2013\Projects\proyecto4bloquesconMPC\Debug\proyecto4bloques.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Felipe\Documents\Visual Studio 2013\Projects\proyecto4bloquesconMPC\Debug\proyecto4bloques.lib" /MACHINE:X86 Debug\jpError.obj
+         Debug\jpMatrix.obj
+         Debug\mpc.obj
+         Debug\mpcMatrix.obj
+         Debug\MpcReader.obj
+         Debug\Solver.obj
+         Debug\Source.obj
+         proyecto.vcxproj -> C:\Users\Felipe\Documents\Visual Studio 2013\Projects\proyecto4bloquesconMPC\Debug\proyecto4bloques.exe
+     1>Done Building Project "C:\Users\Felipe\Documents\Visual Studio 2013\Projects\proyecto4bloquesconMPC\proyecto\proyecto.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:04.32
