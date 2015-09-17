@@ -2,7 +2,7 @@
 #include "gurobi_c++.h"
 #include "jpMatrix.h"
 #include "sstream"
-#include "case9v2.h"
+
 
 
 Solver::Solver()
@@ -14,10 +14,11 @@ void Solver::addVirtualUnits(mpc *mpc){
 	for (int i = 0; i < mpc->getMatrixVariable("bus").rows; i++){
 		if (mpc->getMatrixVariable("bus").getCol(3).at(i)>0){
 			busNums.push_back(mpc->getMatrixVariable("bus").getCol(1).at(i));
+			std::cout << " Virtual Units added at bus: " << i << std::endl;
 		}
 	}
-	std::cout << "Se deben agregar " << busNums.size() << " unidades virtuales " << std::endl;
 	
+
 	std::vector <double> dummyVector;
 	for (int i = 0; i < busNums.size(); i++){
 		dummyVector.push_back(busNums.at(i)); //1
@@ -59,9 +60,9 @@ void Solver::addVirtualUnits(mpc *mpc){
 		dummyVector.clear();
 		dummyVector.shrink_to_fit();
 	}
-	
 
-	
+
+
 
 
 }
@@ -144,8 +145,8 @@ void Solver::solve(mpc mpc){
 
 	checkValidFile(mpc);
 
+	mpc.makePTDF(mpc.getMatrixVariable("branch"), mpc.getMatrixVariable("bus"));
 	mpc.printVariablesStored();
-
 
 
 	int const rowsLinMat = mpc.getMatrixVariable("branch").rows;
@@ -237,7 +238,7 @@ void Solver::solve(mpc mpc){
 	}
 	model.update();
 
-	
+
 
 	GRBVar* n;
 
@@ -247,6 +248,7 @@ void Solver::solve(mpc mpc){
 	double factor = 0;
 	double factorFijo = (pow(1 + interes, periodos) - 1) / (interes*pow(1 + interes, periodos - 1));
 
+
 	for (int i = 0; i < periodos; i++){
 		for (int j = 0; j < CentralesNoCreadas; j++){
 			ostringstream name;
@@ -254,6 +256,7 @@ void Solver::solve(mpc mpc){
 			factor = factorFijo - (pow(1 + interes, i) - 1) / (interes*pow(1 + interes, i - 1));
 			n[i*CentralesNoCreadas + j].set(GRB_DoubleAttr_Obj, mpc.getMatrixVariable("gen").getCol(9).at(j) * ((mpc.getMatrixVariable("gen").getCol(11).at(j)) / pow(interes + 1, i) + mpc.getMatrixVariable("gen").getCol(13).at(j) * (factor)));
 			n[i*CentralesNoCreadas + j].set(GRB_StringAttr_VarName, name.str()); //n21= n del generador 2  (de los no creados) en el periodo 1
+			n[i*CentralesNoCreadas + j].set(GRB_DoubleAttr_UB, UnidadesMaximas); //Arreglar UB de enes
 		}
 	}
 
@@ -264,45 +267,55 @@ void Solver::solve(mpc mpc){
 
 	for (int i = 0; i < CentralesNoCreadas; i++){
 		GRBLinExpr CantidadUnidades = 0;
+		ostringstream name;
 		for (int j = 0; j < periodos; j++){
 			CantidadUnidades += n[j*CentralesNoCreadas + i]; // n11= n[0], n21 = n[1], n31=[2] , n12= n[CentralesNoCreadas], n13= n[CentralesNoCreadas*2]
 		}
-		model.addConstr(CantidadUnidades <= UnidadesMaximas, "UnidadesMaximas");
-
+		name << "Unidades_Maximas_P_" << PosicionesCentralesNoCreadas[i] + 1;
+		model.addConstr(CantidadUnidades <= UnidadesMaximas, name.str());
 	}
 
 	// Balances de carga
+
 	for (int i = 0; i < periodos; i++){
 		for (int j = 0; j < subperiodos; j++){
 			GRBLinExpr Generadores = 0;
 			for (int k = 0; k < rowsGenMat; k++){
 				Generadores += Potencias[i*subperiodos*rowsGenMat + j*rowsGenMat + k];
 			}
-			model.addConstr(Generadores == demandas[j + i*subperiodos], "PotenciasGeneradas");
+			ostringstream name;
+			name << "Balance_Demanda_" << i + 1 << periodnames[j];
+			model.addConstr(Generadores == demandas[j + i*subperiodos], name.str());
 		}
 	}
+
 	model.update();
 
 
 
 	// Criterio de reserva
+
 	for (int i = 0; i < periodos; i++){ // 1 periodo
 		for (int l = 0; l < subperiodos; l++){
-			ostringstream name; // se inicia el nombre
-			GRBLinExpr PotenciasMaximas = 0; // expresion se inicia en 0
-			GRBLinExpr enesExp = 0;  // expresion se inicia en 0
-			for (int j = 0; j < rowsGenMat; j++){
-				if (mpc.getMatrixVariable("gen").getCol(8).at(j) == 1){
-					PotenciasMaximas += mpc.getMatrixVariable("gen").getCol(9).at(j); // sumo todos los que no son 0, sea estan creados
-				}
-				else if (mpc.getMatrixVariable("gen").getCol(8).at(j) == 0){
-					for (int k = -1; k < i; k++){
-						enesExp += n[(k + 1)*CentralesNoCreadas + j] * mpc.getMatrixVariable("gen").getCol(9).at(j); // sumo las expresiones de n a un periodo dado
+			if (l == 3)
+			{
+				ostringstream name; // se inicia el nombre
+				GRBLinExpr PotenciasMaximas = 0; // expresion se inicia en 0
+				GRBLinExpr enesExp = 0;  // expresion se inicia en 0
+				for (int j = 0; j < rowsGenMat; j++){
+					if (mpc.getMatrixVariable("gen").getCol(8).at(j) == 1){
+						PotenciasMaximas += mpc.getMatrixVariable("gen").getCol(9).at(j); // sumo todos los que no son 0, o sea estan creados
+					}
+					else if (mpc.getMatrixVariable("gen").getCol(8).at(j) == 0){
+						for (int k = -1; k < i; k++){
+							enesExp += n[(k + 1)*CentralesNoCreadas + j] * mpc.getMatrixVariable("gen").getCol(9).at(j); // sumo las expresiones de n a un periodo dado
+						}
 					}
 				}
+				name << "Criterio_Reserva_" << i + 1 << periodnames[l];
+				model.addConstr(PotenciasMaximas + enesExp >= demandas[i*subperiodos + l] * 1.2, name.str());
 			}
-			name << "Reserve_critery_periode_" << i + 1 << periodnames[l];
-			model.addConstr(PotenciasMaximas + enesExp >= demandas[i*subperiodos + l] * 1.2, name.str());
+			else{}
 		}
 	}
 
@@ -320,34 +333,35 @@ void Solver::solve(mpc mpc){
 	for (int i = 0; i < rowsGenMat; i++){
 		int filaExtraida = mpc.getMatrixVariable("gen").getCol(1).at(i);
 		for (int j = 0; j < rowsPTDF; j++){
-			PTDFModified(j, i) = PTDF[j][filaExtraida - 1];
+			PTDFModified(j, i) = mpc.PTDF(j,filaExtraida - 1);
 		}
 	}
 
 
 	matrix demands;
-	demands.Init(rowsBusMat, periodos);
+	demands.Init(rowsBusMat, periodos*subperiodos);
 
 	for (int i = 0; i < rowsBusMat; i++){
-		for (int j = 0; j < periodos; j++){
+		for (int j = 0; j < periodos*subperiodos; j++){
 			//demands(i, j) = demandaPorPeriodo[i][j];
-			demands(i, j) = mpc.getMatrixVariable("Demands").array2D[i][j];
+			demands(i, j) = mpc.getMatrixVariable("Demands").array2D[j][i];
 		}
 	}
 
-
-
+	/*
 	matrix PTDFOriginal;
 	PTDFOriginal.Init(PTDF, rowsLinMat, rowsBusMat);
-
+	*/
 
 	matrix result;
+	
 
 
 
 
 	try{
-		result = PTDFOriginal*demands;
+		//result = PTDFOriginal*demands;
+		result = mpc.PTDF*demands;
 
 	}
 	catch (jp_error Error){
@@ -355,29 +369,28 @@ void Solver::solve(mpc mpc){
 	}
 
 	//result.ToString();
-
 	for (int i = 0; i < periodos; i++){
-		for (int j = 0; j < rowsLinMat; j++){
-			for (int l = 0; l < subperiodos; l++){
+		for (int j = 0; j < subperiodos; j++){
+			for (int l = 0; l < rowsLinMat; l++){
 				GRBLinExpr PTDFResultL = 0;
 				GRBLinExpr PTDFResultR = 0;
 				for (int k = 0; k < rowsGenMat; k++){
-					PTDFResultL += PTDFModified(j, k)*Potencias[i*rowsGenMat + k + l*rowsGenMat];
+					PTDFResultL += PTDFModified(l, k)*Potencias[i*rowsGenMat*subperiodos + k + j*rowsGenMat];
 				}
-				PTDFResultR = mpc.getMatrixVariable("branch").getCol(6).at(j) + result(j, i);
-				model.addConstr(PTDFResultL <= PTDFResultR, "PTDF Constrain Superior");
+				ostringstream name1;
+				name1 << "PTDF_superior_Linea_" << mpc.getMatrixVariable("branch").getCol(1).at(l) << "-" << mpc.getMatrixVariable("branch").getCol(1).at(l) << "_" << i + 1 << periodnames[j];
+				PTDFResultR = mpc.getMatrixVariable("branch").getCol(6).at(l) + result(l, i*subperiodos + j);
+				model.addConstr(PTDFResultL <= PTDFResultR, name1.str());
 				model.update();
-				PTDFResultR = mpc.getMatrixVariable("branch").getCol(6).at(j) - result(j, i);
-				model.addConstr(-PTDFResultL <= PTDFResultR, "PTDF Constrain Inferior");
+				ostringstream name2;
+				name2 << "PTDF_inferior_Linea_" << mpc.getMatrixVariable("branch").getCol(2).at(l) << "-" << mpc.getMatrixVariable("branch").getCol(1).at(l) << "_" << i + 1 << periodnames[j];
+				PTDFResultR = mpc.getMatrixVariable("branch").getCol(6).at(l) - result(l, i*subperiodos + j);
+				model.addConstr(-PTDFResultL <= PTDFResultR, name2.str());
 			}
-
 		}
-
 	}
-
-
 	// Criterio Potencia Maxima
-	
+
 	for (int i = 0; i < rowsGenMat; i++){
 		for (int j = 0; j < periodos; j++){
 			for (int l = 0; l < subperiodos; l++){
@@ -386,48 +399,53 @@ void Solver::solve(mpc mpc){
 					for (int k = 0; k < j + 1; k++){
 						PotMax += n[k*CentralesNoCreadas + i];
 					}
-					model.addConstr(Potencias[i + j*rowsGenMat*subperiodos + l*rowsGenMat] <= PotMax*mpc.getMatrixVariable("gen").getCol(9).at(i), "Potencia Maxima");
+					ostringstream name;
+					name << "Potencia_Maxima_P_" << i + 1 << periodnames[l];
+					model.addConstr(Potencias[i + j*rowsGenMat*subperiodos + l*rowsGenMat] <= PotMax*mpc.getMatrixVariable("gen").getCol(9).at(i), name.str());
 					model.update();
 				}
 				else{
-					
+
 
 				}
 			}
 		}
 	}
-	
+
 
 
 	model.update();
 	model.write("archivo.lp");
-	std::cout << "############################# OPTIMAZING ##################################" << std::endl;
+	std::cout << "############################# OPTIMIZANDO ##################################" << std::endl;
 
 	model.optimize();
 
-	//Para mostrar los resultados
-	
-	for (int i = 0; i < periodos; i++){
-		for (int j = 0; j < rowsGenMat; j++){
-			cout << Potencias[i*rowsGenMat + j].get(GRB_StringAttr_VarName) << ": " << Potencias[i*rowsGenMat + j].get(GRB_DoubleAttr_X) << endl;
-		}
-	}
-	for (int i = 0; i < periodos; i++){
-		for (int j = 0; j < CentralesNoCreadas; j++){
-			cout << n[i*CentralesNoCreadas + j].get(GRB_StringAttr_VarName) << ": " << n[i*CentralesNoCreadas + j].get(GRB_DoubleAttr_X) << endl;
-		}
-	}
 
-	
+	//Para mostrar los resultados
+
+
+	if (model.get(GRB_IntAttr_SolCount)){
+		for (int i = 0; i < periodos*rowsGenMat*subperiodos; i++){
+
+			cout << Potencias[i].get(GRB_StringAttr_VarName) << ": " << Potencias[i].get(GRB_DoubleAttr_X) << endl;
+
+		}
+		for (int i = 0; i < periodos; i++){
+			for (int j = 0; j < CentralesNoCreadas; j++){
+				cout << n[i*CentralesNoCreadas + j].get(GRB_StringAttr_VarName) << ": " << n[i*CentralesNoCreadas + j].get(GRB_DoubleAttr_X) << endl;
+			}
+		}
+	}
+	else{
+		cout << "No solution found" << endl;
+	}
 
 
 	// se borran las variables de la memoria
 	delete[] Potencias;
 	delete[] PosicionesCentralesNoCreadas;
-
+	delete[] n;
 	delete env;
-
-
 }
 
 Solver::~Solver()

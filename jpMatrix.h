@@ -1,3 +1,6 @@
+
+#ifndef JPMATRIX_H
+#define JPMATRIX_H
 #include "jpError.h"
 #include <Windows.h>
 #include <string>
@@ -32,6 +35,7 @@ public:
 	}
 
 	void Init(UINT rowss, UINT colss);
+	void Init(double **arr, UINT rowss, UINT colss);
 	template <size_t size_x, size_t size_y> void Init(double(&ar)[size_x][size_y], UINT rowss, UINT colss);
 	matrix t();
 	matrix  operator*(matrix &from_2);
@@ -59,3 +63,5 @@ template <size_t size_x, size_t size_y> void matrix::Init(double(&ar)[size_x][si
 	}
 	ninit = 1;
 }
+
+#endif

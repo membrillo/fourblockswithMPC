@@ -1,7 +1,10 @@
 #pragma once
 #include <string>
 #include "mpcMatrix.h" 
+#include "jpMatrix.h"
 #include <vector>
+#include "linalg.h"
+
 
 struct variable{
 	std::string name;
@@ -26,14 +29,21 @@ public:
 	void printVariablesStored();
 	int periods;
 	int subperiods;
-
+	matrix PTDF;
 	void createDemandsMatrix();
-
-
 	void addVariable(std::string newName, double value);
 	void clearMemory();
 	double& getVariable(std::string nameToSearch);
+	void makePTDF(mpcMatrix branch, mpcMatrix bus);
 	~mpc();
+
+private:
+	matrix zeros(int rowss, int colss);
+	void inverse(matrix &from_1, matrix &ret);
+	matrix diag(matrix &a);
+	matrix mpcMatrixEquivalent(mpcMatrix EqMatrix);
+	void jpMakePTDF(matrix &branch, matrix &ret, int nb);
+	
 
 };
 

@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\LinAlg">
+      <UniqueIdentifier>{9cbbe4a3-7b67-49ab-9ace-c50729d31122}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -36,6 +39,45 @@
     <ClCompile Include="Solver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LinAlg\alglibinternal.cpp">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClCompile>
+    <ClCompile Include="LinAlg\alglibmisc.cpp">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClCompile>
+    <ClCompile Include="LinAlg\ap.cpp">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClCompile>
+    <ClCompile Include="LinAlg\dataanalysis.cpp">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClCompile>
+    <ClCompile Include="LinAlg\diffequations.cpp">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClCompile>
+    <ClCompile Include="LinAlg\fasttransforms.cpp">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClCompile>
+    <ClCompile Include="LinAlg\integration.cpp">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClCompile>
+    <ClCompile Include="LinAlg\interpolation.cpp">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClCompile>
+    <ClCompile Include="LinAlg\linalg.cpp">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClCompile>
+    <ClCompile Include="LinAlg\optimization.cpp">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClCompile>
+    <ClCompile Include="LinAlg\solvers.cpp">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClCompile>
+    <ClCompile Include="LinAlg\specialfunctions.cpp">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClCompile>
+    <ClCompile Include="LinAlg\statistics.cpp">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="case9.h">
@@ -54,6 +96,51 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Solver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LinAlg\alglibinternal.h">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClInclude>
+    <ClInclude Include="LinAlg\alglibmisc.h">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClInclude>
+    <ClInclude Include="LinAlg\ap.h">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClInclude>
+    <ClInclude Include="LinAlg\dataanalysis.h">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClInclude>
+    <ClInclude Include="LinAlg\diffequations.h">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClInclude>
+    <ClInclude Include="LinAlg\fasttransforms.h">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClInclude>
+    <ClInclude Include="LinAlg\integration.h">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClInclude>
+    <ClInclude Include="LinAlg\interpolation.h">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClInclude>
+    <ClInclude Include="LinAlg\linalg.h">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClInclude>
+    <ClInclude Include="LinAlg\optimization.h">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClInclude>
+    <ClInclude Include="LinAlg\solvers.h">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClInclude>
+    <ClInclude Include="LinAlg\specialfunctions.h">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClInclude>
+    <ClInclude Include="LinAlg\statistics.h">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClInclude>
+    <ClInclude Include="LinAlg\stdafx.h">
+      <Filter>Source Files\LinAlg</Filter>
+    </ClInclude>
+    <ClInclude Include="jpMatrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -26,6 +26,21 @@ void matrix::Init(UINT rowss, UINT colss){
 	}
 
 };
+void matrix::Init(double **arr, UINT rowss, UINT colss){
+	nrows = rowss;
+	ncols = colss;
+	arr = new double*[nrows];
+	for (UINT i = 0; i < nrows; ++i){
+		arr[i] = new double[ncols];
+	}
+	for (UINT i = 0; i < rowss; ++i){
+		for (int j = 0; j < colss; ++j){
+			arr[i][j] = arr[i][j];
+		}
+	}
+	ninit = 1;
+
+};
 double& matrix::operator()(const UINT n, const UINT m){
 	if (n >= nrows || m >= ncols){
 		throw jp_error(OUT_OF_INDEX);
@@ -64,13 +79,13 @@ void matrix::operator=(matrix &oth_mat){
 
 
 matrix matrix::t(){
-	matrix ret(this->ncols, this->nrows);
+	matrix *ret = new matrix(this->ncols, this->nrows);
 	for (int i = 0; i < this->nrows; ++i){
 		for (int j = 0; j < this->ncols; ++j){
-			ret(j, i) = arr[i][j];
+			(*ret)(j, i) = arr[i][j];
 		}
 	}
-	return ret;
+	return *ret;
 }
 
 

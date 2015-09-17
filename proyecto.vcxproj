@@ -58,13 +58,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\gurobi604\win32\include;C:\gurobi603\win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\gurobi604\win32\include;Linalg;C:\gurobi603\win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\gurobi604\win32\lib;C:\gurobi603\win64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\gurobi604\win32\lib;C:\gurobi603\win64\lib;Linalg;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>C:\gurobi604\win32\lib\gurobi60.lib;C:\gurobi604\win32\lib\gurobi_c++mtd2013.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -89,6 +89,19 @@
   <ItemGroup>
     <ClCompile Include="jpError.cpp" />
     <ClCompile Include="jpMatrix.cpp" />
+    <ClCompile Include="LinAlg\alglibinternal.cpp" />
+    <ClCompile Include="LinAlg\alglibmisc.cpp" />
+    <ClCompile Include="LinAlg\ap.cpp" />
+    <ClCompile Include="LinAlg\dataanalysis.cpp" />
+    <ClCompile Include="LinAlg\diffequations.cpp" />
+    <ClCompile Include="LinAlg\fasttransforms.cpp" />
+    <ClCompile Include="LinAlg\integration.cpp" />
+    <ClCompile Include="LinAlg\interpolation.cpp" />
+    <ClCompile Include="LinAlg\linalg.cpp" />
+    <ClCompile Include="LinAlg\optimization.cpp" />
+    <ClCompile Include="LinAlg\solvers.cpp" />
+    <ClCompile Include="LinAlg\specialfunctions.cpp" />
+    <ClCompile Include="LinAlg\statistics.cpp" />
     <ClCompile Include="mpc.cpp" />
     <ClCompile Include="mpcMatrix.cpp" />
     <ClCompile Include="MpcReader.cpp" />
@@ -98,6 +111,21 @@
   <ItemGroup>
     <ClInclude Include="case9.h" />
     <ClInclude Include="case9v2.h" />
+    <ClInclude Include="jpMatrix.h" />
+    <ClInclude Include="LinAlg\alglibinternal.h" />
+    <ClInclude Include="LinAlg\alglibmisc.h" />
+    <ClInclude Include="LinAlg\ap.h" />
+    <ClInclude Include="LinAlg\dataanalysis.h" />
+    <ClInclude Include="LinAlg\diffequations.h" />
+    <ClInclude Include="LinAlg\fasttransforms.h" />
+    <ClInclude Include="LinAlg\integration.h" />
+    <ClInclude Include="LinAlg\interpolation.h" />
+    <ClInclude Include="LinAlg\linalg.h" />
+    <ClInclude Include="LinAlg\optimization.h" />
+    <ClInclude Include="LinAlg\solvers.h" />
+    <ClInclude Include="LinAlg\specialfunctions.h" />
+    <ClInclude Include="LinAlg\statistics.h" />
+    <ClInclude Include="LinAlg\stdafx.h" />
     <ClInclude Include="mpc.h" />
     <ClInclude Include="mpcMatrix.h" />
     <ClInclude Include="MpcReader.h" />
