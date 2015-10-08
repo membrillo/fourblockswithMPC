@@ -17,7 +17,7 @@ void Solver::addVirtualUnits(mpc *mpc){
 			std::cout << " Virtual Units added at bus: " << i << std::endl;
 		}
 	}
-	
+
 
 	std::vector <double> dummyVector;
 	for (int i = 0; i < busNums.size(); i++){
@@ -160,7 +160,20 @@ void Solver::solve(mpc mpc){
 	int const UnidadesMaximas = 3;
 	double const interes = 0.1;
 	char periodnames[] = { 'v', 'r', 'm', 'p' };
-
+	int cantVirtuales = 0;
+	for (int i = 0; i < rowsGenMat; i++){
+		if (mpc.getMatrixVariable("gen").getCol(8).at(i) == 2){
+			cantVirtuales++;
+		}
+	}
+	int contador = 0;
+	int* PosicionesBarrasConDemanda;
+	PosicionesBarrasConDemanda = new int[cantVirtuales];
+	for (int i = 0; i < rowsBusMat; i++){
+		if (mpc.getMatrixVariable("bus").getCol(3).at(i) != 0){
+			PosicionesBarrasConDemanda[contador] = i + 1;
+		}
+	}
 
 	//generacion matriz de demanda
 
@@ -194,7 +207,7 @@ void Solver::solve(mpc mpc){
 	int* PosicionesCentralesNoCreadas;
 	PosicionesCentralesNoCreadas = new int[CentralesNoCreadas];
 
-	int contador = 0;
+	contador = 0;
 
 	for (int i = 0; i < rowsGenMat; i++){
 		if (mpc.getMatrixVariable("gen").getCol(8).at(i) == 0){
@@ -333,7 +346,7 @@ void Solver::solve(mpc mpc){
 	for (int i = 0; i < rowsGenMat; i++){
 		int filaExtraida = mpc.getMatrixVariable("gen").getCol(1).at(i);
 		for (int j = 0; j < rowsPTDF; j++){
-			PTDFModified(j, i) = mpc.PTDF(j,filaExtraida - 1);
+			PTDFModified(j, i) = mpc.PTDF(j, filaExtraida - 1);
 		}
 	}
 
@@ -354,9 +367,6 @@ void Solver::solve(mpc mpc){
 	*/
 
 	matrix result;
-	
-
-
 
 
 	try{
@@ -368,6 +378,8 @@ void Solver::solve(mpc mpc){
 		cout << Error.msg;
 	}
 
+
+
 	//result.ToString();
 	for (int i = 0; i < periodos; i++){
 		for (int j = 0; j < subperiodos; j++){
@@ -378,14 +390,15 @@ void Solver::solve(mpc mpc){
 					PTDFResultL += PTDFModified(l, k)*Potencias[i*rowsGenMat*subperiodos + k + j*rowsGenMat];
 				}
 				ostringstream name1;
-				name1 << "PTDF_superior_Linea_" << mpc.getMatrixVariable("branch").getCol(1).at(l) << "-" << mpc.getMatrixVariable("branch").getCol(1).at(l) << "_" << i + 1 << periodnames[j];
+				name1 << "PTDF_superior_Linea_" << mpc.getMatrixVariable("branch").getCol(1).at(l) << "-" << mpc.getMatrixVariable("branch").getCol(2).at(l) << "_" << i + 1 << periodnames[j];
 				PTDFResultR = mpc.getMatrixVariable("branch").getCol(6).at(l) + result(l, i*subperiodos + j);
 				model.addConstr(PTDFResultL <= PTDFResultR, name1.str());
 				model.update();
 				ostringstream name2;
-				name2 << "PTDF_inferior_Linea_" << mpc.getMatrixVariable("branch").getCol(2).at(l) << "-" << mpc.getMatrixVariable("branch").getCol(1).at(l) << "_" << i + 1 << periodnames[j];
+				name2 << "PTDF_inferior_Linea_" << mpc.getMatrixVariable("branch").getCol(1).at(l) << "-" << mpc.getMatrixVariable("branch").getCol(2).at(l) << "_" << i + 1 << periodnames[j];
 				PTDFResultR = mpc.getMatrixVariable("branch").getCol(6).at(l) - result(l, i*subperiodos + j);
 				model.addConstr(-PTDFResultL <= PTDFResultR, name2.str());
+				model.update();
 			}
 		}
 	}
@@ -420,30 +433,101 @@ void Solver::solve(mpc mpc){
 
 	model.optimize();
 
-
 	//Para mostrar los resultados
 
+	matrix generacionBarra; //matriz con generación por barra y periodo
+	generacionBarra.Init(rowsBusMat, periodos*subperiodos);
+
+	int contador2 = 0;
 
 	if (model.get(GRB_IntAttr_SolCount)){
-		for (int i = 0; i < periodos*rowsGenMat*subperiodos; i++){
-
-			cout << Potencias[i].get(GRB_StringAttr_VarName) << ": " << Potencias[i].get(GRB_DoubleAttr_X) << endl;
-
-		}
+		cout << "::::::::::::::::::::::::::::::::::POTENCIAS GENERADAS::::::::::::::::::::::::::::" << endl;
 		for (int i = 0; i < periodos; i++){
+			cout << "--------------------------------------------------------------------------" << endl;
+			cout << "---------------------------YEAR " << i + 1 << "-----------------------------------------" << endl;
+			cout << "--------------------------------------------------------------------------" << endl;
+			for (int j = 0; j < subperiodos; j++){
+				contador = 0;
+				for (int k = 0; k < rowsBusMat; k++){
+					contador2 = 0;
+					for (int l = 0; l < rowsGenMat; l++){
+						if (mpc.getMatrixVariable("gen").getCol(1).at(l) == (k + 1)){
+							contador2 = contador2 + Potencias[i*subperiodos*rowsGenMat + j*rowsGenMat + l].get(GRB_DoubleAttr_X);
+						}
+					}
+					generacionBarra(k, i*subperiodos + j) = contador2;
+				}
+				switch (j){
+				case 0:
+					cout << "////////////////VALLEY////////////////" << endl;
+					break;
+				case 1:
+					cout << "////////////////REST////////////////" << endl;
+					break;
+				case 2:
+					cout << "////////////////MEAN////////////////" << endl;
+					break;
+				case 3:
+					cout << "////////////////PEAK////////////////" << endl;
+					break;
+				}
+				for (int k = 0; k < rowsGenMat; k++){
+					if (k < (rowsGenMat - cantVirtuales)){
+						cout << Potencias[i*subperiodos*rowsGenMat + j*rowsGenMat + k].get(GRB_StringAttr_VarName) << ": " << Potencias[i*subperiodos*rowsGenMat + j*rowsGenMat + k].get(GRB_DoubleAttr_X) << endl;
+					}
+					else{
+						if (Potencias[i*subperiodos*rowsGenMat + j*rowsGenMat + k].get(GRB_DoubleAttr_X) > 0) {
+							cout << "Energia no servida barra " << PosicionesBarrasConDemanda[contador] << ": " << Potencias[i*subperiodos*rowsGenMat + j*rowsGenMat + k].get(GRB_DoubleAttr_X) << endl;
+							contador++;
+						}
+					}
+				}
+			}
+		}
+		cout << "::::::::::::::::::::::::::::::::UNIDADES NUEVAS PARA INVERSION::::::::::::::::::::::::::::" << endl;
+		for (int i = 0; i < periodos; i++){
+			cout << "--------------------------------------------------------------------------" << endl;
+			cout << "---------------------------YEAR " << i + 1 << "-----------------------------------------" << endl;
+			cout << "--------------------------------------------------------------------------" << endl;
 			for (int j = 0; j < CentralesNoCreadas; j++){
 				cout << n[i*CentralesNoCreadas + j].get(GRB_StringAttr_VarName) << ": " << n[i*CentralesNoCreadas + j].get(GRB_DoubleAttr_X) << endl;
 			}
 		}
+		cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" << endl;
+
 	}
 	else{
 		cout << "No solution found" << endl;
 	}
 
+	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" << endl;
+	// Análisis de líneas saturadas, usando la variable slack
+	for (int i = 0; i < periodos; i++){
+		for (int j = 0; j < subperiodos; j++){
+			for (int l = 0; l < rowsLinMat; l++){
+				ostringstream name1;
+				name1 << "PTDF_superior_Linea_" << mpc.getMatrixVariable("branch").getCol(1).at(l) << "-" << mpc.getMatrixVariable("branch").getCol(2).at(l) << "_" << i + 1 << periodnames[j];
+				if (model.getConstrByName(name1.str()).get(GRB_DoubleAttr_Slack)<0.1){
+					cout << "Linea saturada : " << mpc.getMatrixVariable("branch").getCol(1).at(l) << "-" << mpc.getMatrixVariable("branch").getCol(2).at(l) << " Year : " << i + 1 << " period : " << periodnames[j] << endl;
+				}
+				ostringstream name2;
+				name2 << "PTDF_inferior_Linea_" << mpc.getMatrixVariable("branch").getCol(1).at(l) << "-" << mpc.getMatrixVariable("branch").getCol(2).at(l) << "_" << i + 1 << periodnames[j];
+				if (model.getConstrByName(name2.str()).get(GRB_DoubleAttr_Slack)<0.1){
+					cout << "Linea saturada : " << mpc.getMatrixVariable("branch").getCol(1).at(l) << "-" << mpc.getMatrixVariable("branch").getCol(2).at(l) << " Year : " << i + 1 << " period : " << periodnames[j] << endl;
+				}
+			}
+
+		}
+	}
+	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" << endl;
+
+	//generacionBarra.ToString();
 
 	// se borran las variables de la memoria
 	delete[] Potencias;
 	delete[] PosicionesCentralesNoCreadas;
+	delete[] PosicionesBarrasConDemanda;
+
 	delete[] n;
 	delete env;
 }

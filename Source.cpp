@@ -21,6 +21,8 @@ int main(int argc, char *argv[]){
 
 	solver.solve(mpcReader.getMpc());
 
+	std::getchar();
+
 
 }
 
